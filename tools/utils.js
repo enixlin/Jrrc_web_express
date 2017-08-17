@@ -73,7 +73,7 @@ var Tools = {
                 if (ArrayObject.length > 0 && fn.constructor == Function) {
                     // 循环数组的每项
                     while (count < ArrayObject.length) {
-                        var e = array[count];
+                        var e = ArrayObject[count];
                         if (e && e.constructor == Array) {
                             LZH.arrayEach(e, fn);
                         } else {
