@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  引入extjs库-->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/Extjs/theme-neptune/resources/theme-neptune-all.css" />
+    <link rel="stylesheet" type="text/css" href="/Extjs/theme-classic/resources/theme-classic-all.css" />
+    -->
+    <link rel="stylesheet" type="text/css" href="/Extjs/theme-triton/resources/theme-triton-all.css" />
+    <script type="text/javascript" src="/Extjs/ext.js"></script>
+    <script type="text/javascript" src="/Extjs/ext-all-debug.js"></script>
+    <!-- 加载EXTjs中文配置文件 -->
+    <script type="text/javascript" src="/Extjs/locale/locale-zh_CN-debug.js"></script>
+
+</head>
+
+<body>
+</body>
+
+</html>
+
+
+<script>
+    Ext.onReady(function() {
+
+        var gongneng = {
+            treeStore: Ext.create('Ext.data.TreeStore', {
+                fields: ['id', 'role_name'],
+                proxy: {
+                    url: '/roler/getAllRoles',
+                    type: 'ajax'
+                }
+            }),
+
+        };
+        /* 创建主面板容器 */
+        var mianContainer = Ext.create('Ext.panel.Panel', {
+            width: '100%',
+            height: 600,
+            layout: 'border',
+            renderTo: Ext.getBody(),
+            // 主窗口框架
+            items: [
+
+                /* 框架头部  */
+                {
+                    region: 'north',
+                    width: '100%',
+                    height: 50,
+                    layout: 'vbox',
+                    split: true,
+                    items: [{
+                        xtype: 'label',
+                        float: true,
+                        align: 'right',
+                        text: '<font size=25>国际业务信息查询系统<font>'
+                    }, ]
+                },
+                // 左则功能菜单
+                {
+                    region: 'west',
+                    xtype: 'treepanel',
+                    width: '20%',
+                    store: gongneng.treeStore,
+                    displayField: 'role_name',
+                    // title: 'function'
+                },
+                // 中央内容
+                {
+                    region: 'center',
+                    width: '80%',
+                    xtype: 'tabpanel',
+                    items: [{
+                        xtype: 'panel',
+                        closable: true,
+                        title: 'tab1',
+                        items: [{
+                            xtype: 'label',
+                            width: 100,
+                            text: 'label1'
+                        }]
+                    }, {
+                        xtype: 'panel',
+                        closable: true
+                    }],
+                },
+                // 底部版权信息
+                {
+                    region: 'south',
+                    width: '100%',
+                    // title: 'footer'
+                },
+            ]
+
+        }).show();
+    });
+</script>
