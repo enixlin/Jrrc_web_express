@@ -14,10 +14,12 @@ var Report_jsl = function(name) {
 };
 
 util.CLASS.Extend(ReportBase, Report_jsl);
+
 var report = {
-    createReport: function() {
+    createReport: function(cb) {
         var r = new Report_jsl("国际结算报表");
-        r.create();
+        return r.create();
+
     }
 };
 

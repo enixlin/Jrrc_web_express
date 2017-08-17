@@ -4,7 +4,8 @@ var report = require('../model/report.server.model');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.write(report.createReport());
+    //  res.write(report.createReport());
+    res.end(report.createReport());
     //res.render('./login/login', { "title": "login pager" });
 });
 
