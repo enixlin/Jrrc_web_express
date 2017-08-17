@@ -166,12 +166,12 @@ var Tools = {
         /* 单继承 */
         Extend: function(superClass, subClass) {
             var F = new Function();
-            F.prototype = sup.prototype;
-            sub.prototype = new F();
+            F.prototype = superClass.prototype;
+            subClass.prototype = new F();
             // 还原子类的构造器
-            sub.prototype.constructor = sub;
+            subClass.prototype.constructor = subClass;
             // 保存一下父类的原型对象
-            sub.SuperClass = sup.prototype;
+            subClass.SuperClass = superClass.prototype;
         },
 
         /* .多继承 */

@@ -16,6 +16,7 @@ var sessionpage = require("./routes/session");
 var roler = require("./routes/roler");
 var rule = require("./routes/rule");
 var shareBonde = require('./routes/shareBonde');
+var report = require('./routes/report');
 
 var app = express();
 
@@ -68,6 +69,7 @@ app.use("/roler", roler);
 app.use("/rule", rule);
 app.use("/index", index);
 app.use("/shareBonde", shareBonde);
+app.use("/report", report);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

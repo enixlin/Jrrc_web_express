@@ -1,12 +1,24 @@
-var express = require('express');
-var util = require('../tools/utils')
+var express = require("express");
+var util = require("../tools/utils");
+var db = require("../routes/mysql");
 
+var ReportBase = function(name) {
+    this.name = name;
+};
+ReportBase.prototype.create = function() {
+    return this.name;
+};
 
+var Report_jsl = function(name) {
+    this.name = name;
+};
 
-report = {
+util.CLASS.Extend(ReportBase, Report_jsl);
+var report = {
+    createReport: function() {
+        var r = new Report_jsl("国际结算报表");
+        r.create();
+    }
+};
 
-}
-
-
-
-module.exports = LZH;
+module.exports = report;
