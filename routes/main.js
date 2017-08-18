@@ -7,7 +7,6 @@ router.get('/', function(req, res, next) {
     //console.log(req.session.loginUser);
     var user = req.session.loginUser;
     console.log(user);
-    // res.render('./main/main',{"name":"linzhenhuan"});
     res.render('./main/index', user);
 
 });
