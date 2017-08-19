@@ -16,8 +16,19 @@ router.get("/getAllRule", function(req, res, next) {
     rule.getAllRules(function(doc) {
         res.json(doc);
     });
-
 });
+
+/**
+ * 生成功能树
+ */
+router.get("/makeRuleTree", function(req, res, next) {
+    rule.makeRuleTree(function(doc) {
+        res.json(doc);
+    });
+});
+
+
+
 
 /**
  * 添加权限管理

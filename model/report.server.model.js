@@ -23,7 +23,7 @@ var ReportFactory = function(SubClass, SuperClass) {
 ReportFactory.JSL = function() {
     this.type = "JSL";
 };
-Report_jsl.prototype = {
+ReportFactory.prototype = {
     create: function() {
         throw new Error("抽象方法create不能调用");
     },
