@@ -21,9 +21,19 @@ var rule = {
      */
     makeRuleTree: function(cb) {
         this.getAllRules(function(result) {
-
-
-
+            var array = [];
+            // result是一个对象
+            for (var item in result) {
+                // console.log("item is :" + item);
+                console.log("reord is :" + result[item]);
+                //  array[item]
+                result[item].children = [];
+                result[item].type = "";
+                if (result[item].pid == 6) {
+                    result[0].children.push(result[item]);
+                }
+            }
+            // console.log(result);
         });
     },
 

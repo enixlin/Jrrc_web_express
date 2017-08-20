@@ -81,8 +81,10 @@ var user = {
                     userInfo.id == Users[item].id &&
                     userInfo.password == Users[item].password
                 ) {
-                    //req.session.user = Users[item];
-                    return cb(Users[item]);
+                    var user_info = {};
+                    user_info.name = Users[item].name;
+                    user_info.id = Users[item].id;
+                    return cb(user_info);
                 }
             }
             return cb({ result: "false" });

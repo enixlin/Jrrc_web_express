@@ -50,6 +50,7 @@ report_JSL_department.prototype = {
     create: function() {},
     getTasks: function() {}
 }
+
 var report = {
     createReport: function(cb) {
         var r = new Report_jsl("国际结算报表");
