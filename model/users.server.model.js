@@ -29,7 +29,13 @@ var user = {
         cb(result);
     },
 
-    // 取得所有正在使用的用户的用户名和编号
+
+    /**
+     * 取得所有正在使用的用户的用户名和编号
+     * @function {getAvailableUsersNames }
+     * @param  {type} cb {description}
+     * @return {type} {description}
+     */
     getAvailableUsersNames: function(cb) {
         this.getAllUsers(function(Users) {
             var userIdName = new Array();
@@ -42,7 +48,12 @@ var user = {
         });
     },
 
-    // 取得所有用户的全部信息，包含用户名，编号，密码等
+    /**
+     * 取得所有用户的全部信息，包含用户名，编号，密码等
+     * @function {getAllUsers }
+     * @param  {type} cb {description}
+     * @return {type} {description}
+     */
     getAllUsers: function(cb) {
         var result = { success: 0, fail: 0 };
         var sql = "select * from jrrc_user";
@@ -57,7 +68,14 @@ var user = {
         });
     },
 
-    // 添加用户
+
+    /**
+     * 添加用户
+     * @function {addUser}
+     * @param  {type} user {参数是新建立的用户实例对象}
+     * @param  {type} cb   {description}
+     * @return {type} {description}
+     */
     addUser: function(user, cb) {
         var result = { success: 0, fail: 0 };
         var sql = "insert into jrrc_user (name,password,status) values(?,?,?)";
@@ -92,6 +110,12 @@ var user = {
     },
 
     //删除用户
+    /**
+     * @function {删除用户 }
+     * @param  {type} param {参数}
+     * @param  {type} cb    {回调函数}
+     * @return {type} {null}
+     */
     deleteUsers: function(param, cb) {
         var result = { success: 0, fail: 0 };
         var params = JSON.parse(param);

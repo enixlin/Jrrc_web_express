@@ -14,6 +14,7 @@ router.get("/getAvailableUsersNames", function(req, res, next) {
     user.getAvailableUsersNames(function(doc) {
         res.json(doc);
     });
+
 });
 
 router.get("/getAllUsersNames", function(req, res, next) {
@@ -69,6 +70,7 @@ router.post("/deleteUsers", function(req, res, next) {
     user.deleteUsers(params, function(doc) {
         res.json(doc);
     });
+    user.de
 });
 
 //用户角色设置界面
