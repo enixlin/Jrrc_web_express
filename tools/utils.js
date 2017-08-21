@@ -92,7 +92,14 @@ var Tools = {
             }
             // arrayObject.sort(); // 按照字母顺序的排序结果为: 1111, 222, 33, 4
             arrayObject.sort(function(x, y) {
-                return x[colum] - y[colum];
+                if (x[colum[0]] !== y[colum[0]]) {
+                    return x[colum[0]] > y[colum[0]] ? 1 : -1;
+                } else {
+
+                    return x[colum[1]] > y[colum[1]] ? 1 : -1;
+                }
+
+
             }); // 按照数字顺序的排序结果为: 4, 33, 222, 1111
 
 

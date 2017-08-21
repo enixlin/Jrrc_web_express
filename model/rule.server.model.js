@@ -26,7 +26,7 @@ var rule = {
             for (var item in result) {
                 array.push({ id: result[item].id, name: result[item].name, url: result[item].url, status: result[item].status, pid: result[item].pid });
             }
-            var tree = util.Array.toTree(array, 'pid');
+            var tree = util.Array.toTree(array, ['pid', 'id']);
             cb(tree);
             // var array = [];
             // // result是一个对象
