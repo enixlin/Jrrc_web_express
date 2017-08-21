@@ -1,6 +1,7 @@
 var config = require("../config/config");
 var session = require("express-session");
 var db = require("../routes/mysql");
+var util = require('../tools/utils');
 
 /* 功能类 */
 var rule = {
@@ -22,18 +23,24 @@ var rule = {
     makeRuleTree: function(cb) {
         this.getAllRules(function(result) {
             var array = [];
-            // result是一个对象
             for (var item in result) {
-                // console.log("item is :" + item);
-                console.log("reord is :" + result[item]);
-                //  array[item]
-                result[item].children = [];
-                result[item].type = "";
-                if (result[item].pid == 6) {
-                    result[0].children.push(result[item]);
-                }
+                array.push({ id: result[item].id, name: result[item].name, url: result[item].url, status: result[item].status, pid: result[item].pid });
             }
-            // console.log(result);
+            var tree = util.Array.toTree(array, 'pid');
+            cb(tree);
+            // var array = [];
+            // // result是一个对象
+            // for (var item in result) {
+            //     // console.log("item is :" + item);
+            //     console.log("reord is :" + result[item]);
+            //     //  array[item]
+            //     result[item].children = [];
+            //     result[item].type = "";
+            //     if (result[item].pid == 6) {
+            //         result[0].children.push(result[item]);
+            //     }
+            // }
+            // // console.log(result);
         });
     },
 

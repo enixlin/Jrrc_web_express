@@ -29,9 +29,9 @@
 
         var gongneng = {
             treeStore: Ext.create('Ext.data.TreeStore', {
-                fields: ['id', 'role_name'],
+                fields: ['id', 'name', 'url', 'pid'],
                 proxy: {
-                    url: '/roler/getAllRoles',
+                    url: '/rule/makeRuleTree',
                     type: 'ajax'
                 }
             }),
@@ -66,7 +66,7 @@
                     xtype: 'treepanel',
                     width: '20%',
                     store: gongneng.treeStore,
-                    displayField: 'role_name',
+                    displayField: 'name',
                     // title: 'function'
                 },
                 // 中央内容

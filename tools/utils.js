@@ -52,9 +52,6 @@ var Tools = {
         }
     },
 
-
-
-
     /**
      * 数组工具
      */
@@ -87,6 +84,19 @@ var Tools = {
                 console.log(error);
             }
             return this;
+        },
+        toTree: function(arrayObject, colum) {
+            /* 1.对数组排序 */
+            function numberorder(a, b) {
+                return a - b;
+            }
+            // arrayObject.sort(); // 按照字母顺序的排序结果为: 1111, 222, 33, 4
+            arrayObject.sort(function(x, y) {
+                return x[colum] - y[colum];
+            }); // 按照数字顺序的排序结果为: 4, 33, 222, 1111
+
+
+            return arrayObject;
         }
     },
 
@@ -122,13 +132,13 @@ var Tools = {
         },
 
         /**
-                检验接口里的方法 ensureImplements(object)
-                object ：要检测的实例对象
-                先判断接口检验函数接收参数是否满足个数要求
-                最少要有一个对象和一个接口
-                判断接口构造函数里是否全面实现接口实例类里的方法
-                核心代码：检验接口里是否有相关方法，接口里相关的方法名称是否已实现为function
-                */
+                    检验接口里的方法 ensureImplements(object)
+                    object ：要检测的实例对象
+                    先判断接口检验函数接收参数是否满足个数要求
+                    最少要有一个对象和一个接口
+                    判断接口构造函数里是否全面实现接口实例类里的方法
+                    核心代码：检验接口里是否有相关方法，接口里相关的方法名称是否已实现为function
+                    */
         ensureImplements: function(object) {
             // 先判断接口检验函数接收参数是否满足个数要求
             // 最少要有一个对象和一个接口
@@ -157,7 +167,6 @@ var Tools = {
             }
         }
     },
-
 
     /**
      * 类操作

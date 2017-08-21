@@ -61,7 +61,6 @@
         var btn_change_ruler = Ext.create('Ext.button.Button', {
             text: '变更角色',
             width: 100,
-
             icon: '/icons/user/user_go.png',
             style: "float:right;margin:8px 5px 0 0",
             listeners: {
@@ -233,7 +232,7 @@
         function createFunctionTree() {
             var treeModel = Ext.create('Ext.data.TreeModel', {
 
-                fields: ['id', 'rule_id', 'controller', 'rule_name', 'p_id', 'type', 'level', 'status', 'leaf', 'js_file'],
+                fields: ['id', 'name', 'url', 'pid', 'status'],
 
             });
 
@@ -245,7 +244,7 @@
 
                 proxy: {
                     type: 'ajax',
-                    url: '/jrrc_web_php/Rule/makeRuleTree',
+                    url: '/rule/makeRuleTree',
                     reader: {
                         type: 'json',
 
@@ -263,7 +262,7 @@
                 height: 150,
                 store: store,
                 rootVisible: false, //隐藏根节点
-                displayField: "rule_name",
+                displayField: "name",
                 folderSort: false,
 
                 animate: true,
