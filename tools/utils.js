@@ -95,15 +95,44 @@ var Tools = {
                 if (x[colum[0]] !== y[colum[0]]) {
                     return x[colum[0]] > y[colum[0]] ? 1 : -1;
                 } else {
-
                     return x[colum[1]] > y[colum[1]] ? 1 : -1;
                 }
-
-
             }); // 按照数字顺序的排序结果为: 4, 33, 222, 1111
 
+            // 生成一个空对象{'key':reord}存放数组
+            var tree = {};
+            var root = [];
+            for (var item in arrayObject) {
+                tree[arrayObject[item].id] = arrayObject[item];
+                tree[arrayObject[item].id].children = [];
+                tree[arrayObject[item].id].leaf;
+            }
+            for (var item in tree) {
+                if (tree[item].id != tree[item].pid) {
+                    tree[tree[item].pid].children.push(tree[item]);
+                    console.log('tree item is :' + item);
+                    //delete tree[item];
+                } else {
+                    root.push(tree[item]);
+                }
 
-            return arrayObject;
+            }
+            for (var item in tree) {
+                if (tree[item] && tree[item].children.length == 0) {
+                    tree[item].leaf = true;
+                } else {
+                    tree[item].leaf = false;
+                }
+            }
+            for (var item in tree) {
+                if (tree[item].id == tree[item].pid) {
+                    root.push(tree[item]);
+                }
+            }
+
+
+
+            return root;
         }
     },
 
@@ -139,13 +168,13 @@ var Tools = {
         },
 
         /**
-                    检验接口里的方法 ensureImplements(object)
-                    object ：要检测的实例对象
-                    先判断接口检验函数接收参数是否满足个数要求
-                    最少要有一个对象和一个接口
-                    判断接口构造函数里是否全面实现接口实例类里的方法
-                    核心代码：检验接口里是否有相关方法，接口里相关的方法名称是否已实现为function
-                    */
+                        检验接口里的方法 ensureImplements(object)
+                        object ：要检测的实例对象
+                        先判断接口检验函数接收参数是否满足个数要求
+                        最少要有一个对象和一个接口
+                        判断接口构造函数里是否全面实现接口实例类里的方法
+                        核心代码：检验接口里是否有相关方法，接口里相关的方法名称是否已实现为function
+                        */
         ensureImplements: function(object) {
             // 先判断接口检验函数接收参数是否满足个数要求
             // 最少要有一个对象和一个接口

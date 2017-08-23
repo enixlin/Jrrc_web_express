@@ -27,6 +27,36 @@
 <script>
     Ext.onReady(function() {
 
+        /* 创建tab页 */
+        function createTab(container, item) {
+            // console.log(item.data);
+            Ext.Ajax.request({
+                url: item.data.url,
+
+                success: function(response, opts) {
+
+                    // var obj = eval(response.responseText);
+                    //  var btn = Ext.create('Ext.button.Button', {text: 'button'});
+                    var tab = {
+                        title: item.data.name,
+                        closable: true,
+                        Itemid: (item.data.id),
+                        html: item.data.url,
+                        //items: [obj]
+                    };
+
+                    container.add(tab).show();
+                },
+
+                failure: function(response, opts) {
+                    console.log('server-side failure with status code ' + response.status);
+                }
+            });
+
+
+        }
+
+
         var gongneng = {
             treeStore: Ext.create('Ext.data.TreeStore', {
                 fields: ['id', 'name', 'url', 'pid'],
@@ -37,6 +67,57 @@
             }),
 
         };
+        var treePanel = Ext.create('Ext.tree.Panel', {
+            region: 'west',
+            xtype: 'treepanel',
+            width: '20%',
+            id: 'treepanel',
+            rootVisible: false,
+            store: gongneng.treeStore,
+            displayField: 'name',
+            // me: this,
+            listeners: {
+                // Fires when an item is clicked.
+                itemclick: {
+                    fn: function(treePanel, record, item, index, e, eOpts) {
+                        if (record.data.leaf == true) {
+
+                            var tab = Ext.getCmp(record.data.id);
+                            // console.log(tab);
+                            console.log(tab);
+                            if (!tab) {
+                                createTab(tabPanel, record);
+                            } else {
+                                tabPanel.setActiveTab(tab);
+                            }
+
+                            // createTab(tabPanel, record);
+
+                        }
+                    }
+                }
+            }
+        });
+
+        /*  右则主功能tab窗口 */
+        var tabPanel = Ext.create('Ext.tab.Panel', {
+            region: 'center',
+            width: '80%',
+            xtype: 'tabpanel',
+            items: [{
+                xtype: 'panel',
+                closable: true,
+                title: 'tab1',
+                items: []
+
+            }]
+        });
+
+
+
+
+
+
         /* 创建主面板容器 */
         var mianContainer = Ext.create('Ext.panel.Panel', {
             width: '100%',
@@ -60,34 +141,13 @@
                         text: '<font size=25>国际业务信息查询系统<font>'
                     }, ]
                 },
+
                 // 左则功能菜单
-                {
-                    region: 'west',
-                    xtype: 'treepanel',
-                    width: '20%',
-                    store: gongneng.treeStore,
-                    displayField: 'name',
-                    // title: 'function'
-                },
+                treePanel,
                 // 中央内容
-                {
-                    region: 'center',
-                    width: '80%',
-                    xtype: 'tabpanel',
-                    items: [{
-                        xtype: 'panel',
-                        closable: true,
-                        title: 'tab1',
-                        items: [{
-                            xtype: 'label',
-                            width: 100,
-                            text: 'label1'
-                        }]
-                    }, {
-                        xtype: 'panel',
-                        closable: true
-                    }],
-                },
+                tabPanel,
+
+
                 // 底部版权信息
                 {
                     region: 'south',
