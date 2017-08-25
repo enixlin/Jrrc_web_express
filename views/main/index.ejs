@@ -29,32 +29,25 @@
 
         /* 创建tab页 */
         function createTab(container, item) {
-            // console.log(item.data);
-            Ext.Ajax.request({
-                url: item.data.url,
 
-                success: function(response, opts) {
-
-                    // var obj = eval(response.responseText);
-                    //  var btn = Ext.create('Ext.button.Button', {text: 'button'});
-                    var tab = {
-                        title: item.data.name,
-                        closable: true,
-                        Itemid: (item.data.id),
-                        html: item.data.url,
-                        //items: [obj]
-                    };
-
-                    container.add(tab).show();
+            var tab = {
+                title: item.data.name,
+                closable: true,
+                Itemid: (item.data.id),
+                loader: {
+                    url: item.data.url,
+                    autoLoad: true,
+                    scripts: true
                 },
 
-                failure: function(response, opts) {
-                    console.log('server-side failure with status code ' + response.status);
-                }
-            });
+            };
+
+            container.add(tab).show();
+
+        };
 
 
-        }
+
 
 
         var gongneng = {
@@ -81,16 +74,12 @@
                 itemclick: {
                     fn: function(treePanel, record, item, index, e, eOpts) {
                         if (record.data.leaf == true) {
-
                             var tab = Ext.getCmp(record.data.id);
-                            // console.log(tab);
-                            console.log(tab);
                             if (!tab) {
                                 createTab(tabPanel, record);
                             } else {
                                 tabPanel.setActiveTab(tab);
                             }
-
                             // createTab(tabPanel, record);
 
                         }

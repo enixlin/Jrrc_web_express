@@ -85,19 +85,8 @@ var Tools = {
             }
             return this;
         },
-        toTree: function(arrayObject, colum) {
-            /* 1.对数组排序 */
-            function numberorder(a, b) {
-                return a - b;
-            }
-            // arrayObject.sort(); // 按照字母顺序的排序结果为: 1111, 222, 33, 4
-            arrayObject.sort(function(x, y) {
-                if (x[colum[0]] !== y[colum[0]]) {
-                    return x[colum[0]] > y[colum[0]] ? 1 : -1;
-                } else {
-                    return x[colum[1]] > y[colum[1]] ? 1 : -1;
-                }
-            }); // 按照数字顺序的排序结果为: 4, 33, 222, 1111
+        toTree: function(arrayObject, ) {
+
 
             // 生成一个空对象{'key':reord}存放数组
             var tree = {};
@@ -110,12 +99,7 @@ var Tools = {
             for (var item in tree) {
                 if (tree[item].id != tree[item].pid) {
                     tree[tree[item].pid].children.push(tree[item]);
-                    console.log('tree item is :' + item);
-                    //delete tree[item];
-                } else {
-                    root.push(tree[item]);
                 }
-
             }
             for (var item in tree) {
                 if (tree[item] && tree[item].children.length == 0) {
@@ -129,9 +113,6 @@ var Tools = {
                     root.push(tree[item]);
                 }
             }
-
-
-
             return root;
         }
     },
