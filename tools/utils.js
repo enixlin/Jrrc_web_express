@@ -85,7 +85,7 @@ var Tools = {
             }
             return this;
         },
-        toTree: function(arrayObject, ) {
+        toTree: function(arrayObject) {
 
 
             // 生成一个空对象{'key':reord}存放数组

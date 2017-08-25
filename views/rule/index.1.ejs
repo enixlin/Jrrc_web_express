@@ -1,0 +1,239 @@
+<script>
+    Ext.onReady(function() {
+        //添加权限输入面板
+        var addRulePanel = Ext.create('Ext.form.Panel', {
+            width: 350,
+            height: 250,
+            bodyPadding: 5,
+            layout: 'auto',
+            items: [{
+                    xtype: 'textfield',
+                    fieldLabel: '权限名称',
+                    labelWidth: 80,
+                    width: 300,
+                    name: 'name',
+                    margin: '5 5 5 5',
+                    allowBlank: false
+                }, {
+                    xtype: 'textfield',
+                    fieldLabel: '请求路径',
+                    labelWidth: 80,
+                    width: 300,
+                    name: 'url',
+                    margin: '5 5 5 5',
+                    allowBlank: false
+                }, {
+                    xtype: 'textfield',
+                    fieldLabel: '父节点',
+                    labelWidth: 80,
+                    width: 300,
+                    name: 'pid',
+                    margin: '5 5 5 5',
+                    allowBlank: false
+                }, {
+                    xtype: 'button',
+                    text: '添加',
+                    margin: '5 5 5 50',
+                    align: 'right',
+                    width: 80,
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                var rule = addRulePanel.getForm().getValues();
+                                if (rule.name == "" || rule.url == "") {
+                                    alert('权限名称或请求地址不能为空');
+                                    return;
+                                }
+                                //提交权限添加请求到服务器
+                                Ext.Ajax.request({
+                                    url: "/rule/addRule",
+                                    method: 'post',
+                                    params: {
+                                        'rule': JSON.stringify(rule)
+                                    },
+                                    success: function(response, opts) {
+                                        if ('' != response.responseText) {
+                                            alert("返回信息:" + response.responseText);
+                                            ruleStore.load();
+                                            return true;
+                                        } else {
+                                            alert("没有返回信息:" + response.responseText);
+                                            return false;
+                                        }
+                                    },
+                                    failure: function(response, opts) {
+                                        return false;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }, {
+                    xtype: 'button',
+                    text: '关闭',
+                    margin: '5 5 5 50',
+                    align: 'center',
+                    width: 80,
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                addRuleWindow.setHidden(true);
+                            }
+                        }
+                    }
+                },
+
+            ],
+            renderTo: addRuleWindow
+        });
+
+        var addRuleWindow = Ext.create('Ext.window.Window', {
+            title: "添加权限",
+            modal: true,
+            defaultAlign: 'c-c',
+            width: 350,
+            height: 250,
+            closable: true,
+            x: 530,
+            y: 310,
+            items: [addRulePanel],
+        });
+
+        //角色列表store
+        var ruleStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'name', 'url', 'pid', 'level'],
+            proxy: {
+                type: 'ajax',
+                // method:'post',
+                url: '/rule/getAllRule'
+            }
+        }).load();
+
+
+        //权限列表
+        var ruleList = Ext.create('Ext.grid.Panel', {
+            width: 500,
+            height: 400,
+            margin: '10 auto 10 auto',
+            title: '系统权限列表',
+            floating: true,
+            selType: 'checkboxmodel',
+            selModel: {
+                type: 'rowmodel'
+            },
+            plugins: {
+                ptype: 'cellediting',
+                clicksToEdit: 1
+            },
+
+            store: ruleStore,
+            columns: [{
+                text: '编号',
+                dataIndex: 'id'
+            }, {
+                text: '权限名称',
+                dataIndex: 'name',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: '请求地址',
+                dataIndex: 'url',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: '父节点',
+                dataIndex: 'pid',
+                editor: {
+                    xtype: 'textfield',
+                }
+            }, {
+                text: '层级',
+                dataIndex: 'level',
+                editor: {
+                    xtype: 'textfield',
+                }
+            }],
+
+            //工具条按键
+            tbar: [{
+                    text: '显示添加权限输入窗口',
+                    icon: '/public/icons/medal_gold_add.png',
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                //  alert('show add role window');
+                                addRuleWindow.show();
+
+                            }
+                        }
+                    }
+                },
+
+                {
+                    text: '删除权限',
+                    icon: '/public/icons/medal_gold_delete.png',
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                if (confirm("确定要删除所选的权限")) {
+                                    var selectRule = ruleList.getSelectionModel().getSelection();
+                                    rules = [];
+                                    for (var item in selectRule) {
+                                        rules.push(selectRule[item].data);
+                                    };
+                                    Ext.Ajax.request({
+                                        url: '/rule/deleteRule',
+                                        method: 'post',
+                                        params: {
+                                            "rule": JSON.stringify(rules)
+                                        },
+                                        success: function(response, opts) {
+                                            alert('提交保存成功,确认后刷新.', response.responseText);
+                                            ruleStore.load();
+                                        },
+                                        failure: function(response, opts) {}
+                                    });
+                                } else {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                },
+
+                {
+                    text: '修改权限',
+                    icon: '/public/icons/medal_gold_3.png',
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                var allRules = ruleList.getStore().getData().items;;
+                                rules = [];
+                                for (var item in allRules) {
+                                    rules.push(allRules[item].data);
+                                };
+                                Ext.Ajax.request({
+                                    url: '/rule/modifyRule',
+                                    method: 'post',
+                                    params: {
+                                        rule: JSON.stringify(rules)
+                                    },
+                                    success: function(response, opts) {
+                                        alert(response.responseText);
+                                        ruleStore.load();
+                                    },
+                                    failure: function(response, opts) {
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+                },
+            ],
+
+        });
+    });
+</script>

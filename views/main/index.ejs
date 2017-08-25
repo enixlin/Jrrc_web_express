@@ -33,7 +33,7 @@
             var tab = {
                 title: item.data.name,
                 closable: true,
-                Itemid: (item.data.id),
+                id: 'tab' + item.data.id, //不能是纯数字的,所以加tab开头
                 loader: {
                     url: item.data.url,
                     autoLoad: true,
@@ -74,9 +74,11 @@
                 itemclick: {
                     fn: function(treePanel, record, item, index, e, eOpts) {
                         if (record.data.leaf == true) {
-                            var tab = Ext.getCmp(record.data.id);
+
+                            var tab = Ext.getCmp('tab' + record.data.id);
                             if (!tab) {
                                 createTab(tabPanel, record);
+
                             } else {
                                 tabPanel.setActiveTab(tab);
                             }
@@ -93,6 +95,9 @@
             region: 'center',
             width: '80%',
             xtype: 'tabpanel',
+            plain: false,
+            id: "tabPanel",
+
             items: [{
                 xtype: 'panel',
                 closable: true,
