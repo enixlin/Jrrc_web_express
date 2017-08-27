@@ -1,5 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="rulediv"></div>
+</body>
+
+</html>
 <script>
     Ext.onReady(function() {
+        var rulediv = Ext.get("rulediv");
         //添加权限输入面板
         var addRulePanel = Ext.create('Ext.form.Panel', {
             width: 350,
@@ -90,13 +106,14 @@
         var addRuleWindow = Ext.create('Ext.window.Window', {
             title: "添加权限",
             modal: true,
-            defaultAlign: 'c-c',
             width: 350,
             height: 250,
             closable: true,
+            closeAction: 'hide',
             x: 530,
             y: 310,
             items: [addRulePanel],
+
         });
 
         //角色列表store
@@ -114,9 +131,10 @@
         var ruleList = Ext.create('Ext.grid.Panel', {
             width: 500,
             height: 400,
+            renderTo: rulediv,
             margin: '10 auto 10 auto',
             title: '系统权限列表',
-            floating: true,
+
             selType: 'checkboxmodel',
             selModel: {
                 type: 'rowmodel'

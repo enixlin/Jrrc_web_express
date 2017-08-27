@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        Ext.onReady(function() {
+            // Ext.Msg.alert('Status', 'Changes saved successfully.');
+            /* 取得div容器放置所有的组件 */
+            var rolediv = Ext.get('rolediv');
+
+            /* 角色列表model */
+            var roleStore = Ext.create('Ext.data.Store', {
+                fields: ['id', 'role_name', 'status'],
+                proxy: {
+                    type: 'ajax',
+                    url: '/roler/getAllRole',
+                    reader: {
+                        type: 'json',
+
+                    }
+                },
+                autoLoad: true
+            });
+
+            /* 角色列表 */
+            var roleListPanel = Ext.create('Ext.grid.Panel', {
+                width: '100%',
+                height: 480,
+                store: roleStore,
+                renderTo: rolediv,
+                selModel: {
+                    type: 'rowmodel'
+                },
+                plugins: {
+                    ptype: 'cellediting',
+                    clicksToEdit: 1
+                },
+                columns: [{
+                    text: '编号',
+                    dataIndex: 'id',
+                    editor: {
+                        xtype: 'textfield'
+                    }
+                }, {
+                    text: '角色名称',
+                    dataIndex: 'role_name',
+                    editor: {
+                        xtype: 'textfield'
+                    }
+                }, {
+                    text: '状态',
+                    dataIndex: 'status',
+                    editor: {
+                        xtype: 'textfield'
+                    }
+                }],
+                tbar: [{
+                        text: "删除角色",
+                        icon: '../../public/icons/user/user_delete.png',
+                        defaultAlign: 'right',
+                        listeners: {
+                            click: {
+                                fn: function() {
+                                    if (confirm("确定要删除选定的角色吗?")) {
+                                        //取得表格中所有选取的记录
+                                        var um1 = roleListPanel.getSelectionModel();
+                                        console.log("um1 is :", um1);
+                                        var um2 = um1.getSelection();
+                                        console.log("um2 is :", um2);
+
+                                        var rolers = [];
+                                        for (var item in um2) {
+
+                                            rolers.push(um2[item].data);
+                                        }
+
+
+                                        //提交角色删除请求到服务器
+                                        Ext.Ajax.request({
+                                            url: "/roler/deleteRole",
+                                            method: 'post',
+                                            params: {
+                                                "rolers": JSON.stringify(rolers)
+                                            },
+                                            success: function(response, opts) {
+                                                if ('' != response.responseText) {
+                                                    alert("提交成功,返回信息:" + response.responseText);
+                                                    roleStore.load();
+                                                    return true;
+                                                } else {
+                                                    alert("没有返回信息:" + response.responseText);
+                                                    return false;
+                                                }
+                                            },
+                                            failure: function(response, opts) {
+                                                return false;
+                                            }
+                                        });
+                                    } else {
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }, {
+                        text: "添加角色",
+                        icon: '../../public/icons/user/user_add.png',
+                        defaultAlign: 'right',
+                        listeners: {
+                            click: {
+                                fn: function() {
+                                    addRoleWindow.show();
+                                }
+                            }
+                        }
+                    }, {
+                        text: "保存修改",
+                        icon: '../../public/icons/user/user_edit.png',
+                        defaultAlign: 'right',
+                        listeners: {
+                            click: {
+                                fn: function() {
+                                    //取得表格中所有选取的记录
+                                    var rows = roleListPanel.getStore().getData().items;
+                                    var rolers = [];
+                                    for (var item in rows) {
+                                        rolers.push(rows[item].data);
+                                    }
+                                    //提交修改角色请求到服务器
+                                    Ext.Ajax.request({
+                                        url: "/roler/modifyRole",
+                                        method: 'post',
+                                        params: {
+                                            "rolers": JSON.stringify(rolers)
+                                        },
+                                        success: function(response, opts) {
+                                            if ('' != response.responseText) {
+                                                alert("返回信息:" + response.responseText);
+                                                roleStore.load();
+                                                return true;
+                                            } else {
+                                                alert("没有返信息 ：" + response.responseText);
+                                                return false;
+                                            }
+
+                                        },
+
+                                        failure: function(response, opts) {
+                                            alert("返回错误 ：" + response.responseText);
+                                            return false;
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+
+                ],
+                buttonAlign: 'right',
+                selType: 'checkboxmodel',
+            });
+
+
+            /* 添加角色窗口 */
+            var addRoleWindow = Ext.create('Ext.window.Window', {
+                width: 400,
+                height: 400,
+                modal: true,
+                closeAction: 'hide',
+                items: [{
+                    width: "100%",
+                    height: 350,
+                    xtype: 'form',
+                    layout: 'anchor',
+                    method: 'post',
+                    url: '/roler/addRole',
+                    defaults: {
+                        anchor: '100%'
+                    },
+                    defaultType: 'textfield',
+                    items: [{
+                        fieldLabel: '角色名称',
+                        width: '100%',
+                        margin: '10 10 10 10',
+                        name: 'role_name',
+                        allowBlank: false
+                    }, {
+                        fieldLabel: '状态',
+                        width: '100%',
+                        margin: '10 10 10 10',
+                        name: 'status',
+                        allowBlank: false
+                    }],
+
+                    // Reset and Submit buttons
+                    buttons: [{
+                        text: 'Reset',
+                        handler: function() {
+                            this.up('form').getForm().reset();
+                        }
+                    }, {
+                        text: 'Submit',
+                        formBind: true, //only enabled once the form is valid
+                        disabled: true,
+
+                        handler: function() {
+                            var form = this.up('form').getForm();
+                            var rolers = form.getValues();
+                            console.log(rolers);
+                            if (form.isValid()) {
+                                form.submit({
+                                    params: {
+                                        "rolers": JSON.stringify(rolers)
+                                    },
+                                    success: function(form, action) {
+                                        Ext.Msg.alert('Success', action.result.msg);
+                                        roleStore.load();
+                                    },
+                                    failure: function(form, action) {
+                                        Ext.Msg.alert('Failed', action.result.msg);
+                                        roleStore.load();
+                                    }
+                                });
+                            }
+                            console.log(form);
+                        }
+
+                    }],
+                }],
+            });
+
+
+
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="rolediv"></div>
+</body>
+
+</html>

@@ -3,105 +3,72 @@
 
 <head>
     <meta charset="UTF-8">
-    <!--  引入extjs库-->
-    <!--
-    <link rel="stylesheet" type="text/css" href="/Extjs/theme-neptune/resources/theme-neptune-all.css" />
-    <link rel="stylesheet" type="text/css" href="/Extjs/theme-classic/resources/theme-classic-all.css" />
-    -->
-    <link rel="stylesheet" type="text/css" href="/Extjs/theme-triton/resources/theme-triton-all.css" />
-    <script type="text/javascript" src="/Extjs/ext.js"></script>
-    <script type="text/javascript" src="/Extjs/ext-all-debug.js"></script>
-    <!-- 加载EXTjs中文配置文件 -->
-    <script type="text/javascript" src="/Extjs/locale/locale-zh_CN-debug.js"></script>
+
     <title>欢迎使用国际业务信息查询系统</title>
-</head>
 
-<body>
+    <script>
+        Ext.onReady(function() {
+            var userrolediv = Ext.get('userrolediv');
 
-</body>
-
-</html>
-
-<script>
-    Ext.onReady(function() {
-        /* 所有用户 */
-        var userStore = Ext.create('Ext.data.Store', {
-            fields: ['id', 'name'],
-            proxy: {
-                url: '/users/getAvailableUsersNames',
-                type: 'ajax'
-            }
-        });
-
-        /* 所有角色 */
-        var roleStore = Ext.create('Ext.data.Store', {
-            fields: ['id', 'role_name'],
-            proxy: {
-                url: '/roler/getAllRoles',
-                type: 'ajax'
-            }
-        });
-
-        /* 展示所有用户角色 */
-        var userRoleList = Ext.create('Ext.grid.Panel', {
-            width: 500,
-            height: 500,
-            margin: '10 auto 10 auto',
-            store: {
-                autoLoad: true,
-                fields: ['role_id', 'user_id'],
-                //method: 'get',
+            /* 取得所有的用户 */
+            var userRoleStore1 = Ext.create('Ext.data.Store', {
+                fields: ['id', 'name'],
                 proxy: {
-                    url: '/users/getAllUserRole',
-                    type: 'ajax'
-                }
-            },
-            selModel: {
-                type: 'rowmodel'
-            },
-            plugins: {
-                ptype: 'cellediting',
-                clicksToEdit: 1
-            },
-            tbar: [{
-                text: "添加用户角色",
-                icon: '../../public/icons/user/user_add.png',
-                defaultAlign: 'right',
+                    url: '/users/getAllUsersNames',
+                    type: 'ajax',
+
+                },
+                autoLoad: true,
+            });
+
+            /* 取得所有的角色 */
+            var userRoleStore2 = Ext.create('Ext.data.Store', {
+                fields: ['id', 'role_name'],
+                proxy: {
+                    url: '/roler/getAllRole',
+                    type: 'ajax',
+                },
+                autoLoad: true,
+            });
+
+            /* 用户选择下拉列表 */
+            var userlistCombo = Ext.create('Ext.form.field.ComboBox', {
+                width: 300,
+                margin: '10 10 10 10 ',
+                fieldLabel: '用户名称:',
+                renderTo: userrolediv,
+                store: userRoleStore1,
+                displayField: "name",
+                valueField: "id",
                 listeners: {
-                    click: {
-                        fn: function() {
-                            // alert('click');
-                            var row = new Ext.data.Record({
-                                role_id: '', //这里是和ColumnModel里面的dataIndex相互对应的 
-                                user_id: '',
-                            });
-                            userRoleList.getStore().insert(0, row); //在第一行插入这一行 这个的调用对象是store  
+                    select: {
+                        fn: function(userlistCombo, record, eOpts) {
+                            alert(record.data.name);
+                            alert(record.data.id);
                         }
                     }
                 }
-            }],
-            columns: [{
-                text: '角色编号',
-                dataIndex: 'role_id',
-                editor: {
-                    xtype: 'combo',
-                    store: roleStore,
-                    // queryMode: 'local',
-                    displayField: 'role_name',
-                    valueField: 'id',
-                }
-            }, {
-                text: '用户编号',
-                dataIndex: 'user_id',
-                editor: {
-                    xtype: 'combo',
-                    store: userStore,
-                    // queryMode: 'local',
-                    displayField: 'name',
-                    valueField: 'id',
-                }
-            }],
-            renderTo: Ext.getBody()
+            });
+
+            /* 角色选择 */
+            /* Ext.ux.form.ItemSelector */
+            var roleSelector = Ext.create('Ext.ux.form.ItemSelector', {
+                renderTo: userrolediv,
+                width: "100%",
+                height: 450,
+                store: userRoleStore2,
+                displayField: "role_name",
+                valueField: "id"
+            });
+
+
+
         });
-    });
-</script>
+    </script>
+</head>
+
+<body>
+    <div id="userrolediv"></div>
+</body>
+
+</html>

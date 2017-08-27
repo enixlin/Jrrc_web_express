@@ -28,7 +28,7 @@ var roler = {
     addRole: function(param, cb) {
         var role = JSON.parse(param);
         var url = "insert into jrrc_roler (role_name,status) values(?,1)";
-        var args = [role.name];
+        var args = [role.role_name];
         db.query(url, args, function(err, result) {
             if (err) {
                 console.log(err);

@@ -2,249 +2,260 @@
 <html>
 
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/Extjs/theme-triton/resources/theme-triton-all.css" />
-	<script type="text/javascript" src="/Extjs/ext.js"></script>
-	<script type="text/javascript" src="/Extjs/ext-all-debug.js"></script>
-	<!-- 加载EXTjs中文配置文件 -->
-	<script type="text/javascript" src="/Extjs/locale/locale-zh_CN-debug.js"></script>
-	
-	<title>欢迎使用国际业务信息查询系统</title>
+    <script type="text/javascript" src="/Extjs/ext.js"></script>
+    <script type="text/javascript" src="/Extjs/ext-all-debug.js"></script>
+    <!-- 加载EXTjs中文配置文件 -->
+    <script type="text/javascript" src="/Extjs/locale/locale-zh_CN-debug.js"></script>
+
+    <title>欢迎使用国际业务信息查询系统</title>
 </head>
 
 <body>
-
+    <div id=rolediv></div>
 </body>
 
 </html>
 
 <script>
+    Ext.onReady(function() {
 
+        var rolediv = Ext.get('rolediv');
+        //添加角色输入面板
+        var addRolePanel = Ext.create('Ext.form.Panel', {
+            width: 500,
+            height: 100,
 
-Ext.onReady(function(){
+            bodyPadding: 5,
 
+            layout: 'hbox',
+            // align:'center',
 
-//添加角色输入面板
-var addRolePanel=Ext.create('Ext.form.Panel',{
-   width:500,
-   height:100,
-
-   bodyPadding: 5,
-   
-   layout: 'hbox',
-  // align:'center',
-
-    items:[
-        {
-            xtype:'textfield',
-            fieldLabel: '角色名称',
-            labelWidth :80,
-            width:300,
-            name: 'name',
-            margin:'5 5 5 5',
-            allowBlank: false
-        },
-            {
-            xtype:'button',
-            text: '添加',
-            margin:'5 5 5 5',
-            align:'right',
-            width:80,
-            listeners:{
-                click:{
-                    fn:function(){
-                         var role=addRolePanel.getForm().getValues();
-                         if(role.name==""){
-                            alert('角色名称不能为空');
-                            return;
-                         }
-                            //提交用户添加请求到服务器
-                            Ext.Ajax.request({
-                            url: "/roler/addRole",
-                            method: 'post',
-                            params: {'rolers':JSON.stringify(role)} ,
-                            success: function (response, opts) {
-                                if (''!= response.responseText) {
-                                    alert("返回信息:"+response.responseText);
-                                    roleStore.load();
-                                    return true;
-                                } else {
-                                    alert("没有返回信息:"+response.responseText);
-                                    return false;
+            items: [{
+                    xtype: 'textfield',
+                    fieldLabel: '角色名称',
+                    labelWidth: 80,
+                    width: 300,
+                    name: 'name',
+                    margin: '5 5 5 5',
+                    allowBlank: false
+                }, {
+                    xtype: 'button',
+                    text: '添加',
+                    margin: '5 5 5 5',
+                    align: 'right',
+                    width: 80,
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                var role = addRolePanel.getForm().getValues();
+                                if (role.name == "") {
+                                    alert('角色名称不能为空');
+                                    return;
                                 }
-                            },
-                            failure: function (response, opts) {
-                                return false;
+                                //提交用户添加请求到服务器
+                                Ext.Ajax.request({
+                                    url: "/roler/addRole",
+                                    method: 'post',
+                                    params: {
+                                        'rolers': JSON.stringify(role)
+                                    },
+                                    success: function(response, opts) {
+                                        if ('' != response.responseText) {
+                                            alert("返回信息:" + response.responseText);
+                                            roleStore.load();
+                                            return true;
+                                        } else {
+                                            alert("没有返回信息:" + response.responseText);
+                                            return false;
+                                        }
+                                    },
+                                    failure: function(response, opts) {
+                                        return false;
+                                    }
+                                });
                             }
-                        });
+                        }
                     }
-                }
-            }
-        },
-        {
-            xtype:'button',
-            text: '关闭',
-            margin:'5 5 5 5',
-            align:'right',
-            width:80,
-            listeners:{
-                click:{
-                    fn:function(){
-                        addRoleWindow.setHidden(true);
+                }, {
+                    xtype: 'button',
+                    text: '关闭',
+                    margin: '5 5 5 5',
+                    align: 'right',
+                    width: 80,
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                addRoleWindow.setHidden(true);
+                            }
+                        }
                     }
-                }
-            }
-        },
- 
-    ],
-    renderTo:addRoleWindow
-  
-});
+                },
 
- var addRoleWindow=Ext.create('Ext.window.Window',{
-        title:"添加角色",
-        modal:true,
-        defaultAlign :'c-c',
-        width:500,
-        height:100,
-        closable:false,
-        x:530,
-        y:310,
-        items:[addRolePanel],
-      
+            ],
+            renderTo: addRoleWindow
+
+        });
+
+        var addRoleWindow = Ext.create('Ext.window.Window', {
+            title: "添加角色",
+            modal: true,
+            defaultAlign: 'c-c',
+            width: 500,
+            height: 100,
+            closable: false,
+            x: 530,
+            y: 310,
+            items: [addRolePanel],
+
+        });
+
+
+
+
+
+        //角色列表store
+        var roleStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'role_name', 'status'],
+            proxy: {
+                type: 'ajax',
+                // method:'post',
+                url: '/roler/getAllRoles'
+            }
+        }).load();
+
+
+        //角色列表
+        var roleList = Ext.create('Ext.grid.Panel', {
+            width: 500,
+            height: 400,
+            renderTo: rolediv,
+            //  x:550,
+            // y:10,
+            // layout:'container',
+            // align:'center',
+            margin: '10 auto 10 auto',
+            title: '系统角色列表',
+            floating: true,
+            selType: 'checkboxmodel',
+            selModel: {
+                type: 'rowmodel'
+            },
+            plugins: {
+                ptype: 'cellediting',
+                clicksToEdit: 1
+            },
+
+            store: roleStore,
+            columns: [{
+                text: 'id',
+                dataIndex: 'id'
+            }, {
+                text: 'name',
+                dataIndex: 'role_name',
+                editor: {
+                    xtype: 'textfield'
+                }
+            }, {
+                text: 'status',
+                dataIndex: 'status',
+                editor: {
+                    xtype: 'combo',
+                    store: [
+                        ['1', 1],
+                        ['0', 0]
+                    ]
+                }
+            }],
+
+            //工具条按键
+            tbar: [{
+                    text: '显示添加角色输入窗口',
+                    icon: '/public/icons/group/group_add.png',
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                //  alert('show add role window');
+                                addRoleWindow.show();
+
+                            }
+                        }
+                    }
+                },
+
+                {
+                    text: '删除角色',
+                    icon: '/public/icons/group/group_delete.png',
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                if (confirm("确定要删除所选的用户")) {
+
+
+                                    var selectRoles = roleList.getSelectionModel().getSelection();
+                                    roles = [];
+                                    for (var item in selectRoles) {
+                                        roles.push(selectRoles[item].data);
+                                    };
+                                    Ext.Ajax.request({
+                                        url: '/roler/deleteRole',
+                                        method: 'post',
+                                        params: {
+                                            rolers: JSON.stringify(roles)
+                                        },
+                                        success: function(response, opts) {
+                                            alert('提交保存成功,确认后刷新.', response.responseText);
+                                            roleStore.load();
+
+                                        },
+                                        failure: function(response, opts) {}
+                                    });
+                                } else {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                },
+
+                {
+                    text: '修改角色',
+                    icon: '/public/icons/group/group_edit.png',
+                    listeners: {
+                        click: {
+                            fn: function() {
+                                var allRoles = roleList.getStore().getData().items;;
+                                roles = [];
+                                for (var item in allRoles) {
+                                    roles.push(allRoles[item].data);
+                                };
+                                Ext.Ajax.request({
+                                    url: '/roler/modifyRole',
+                                    method: 'post',
+                                    params: {
+                                        rolers: JSON.stringify(roles)
+                                    },
+                                    success: function(response, opts) {
+                                        alert(response.responseText);
+                                        roleStore.load();
+
+                                    },
+                                    failure: function(response, opts) {
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+                },
+            ],
+
+        });
+
+
+
+
+
     });
-
-
-
-
-
-//角色列表store
-var roleStore=Ext.create('Ext.data.Store',{
-    fields:[ 'id', 'role_name', 'status'], 
-     proxy: {
-        type: 'ajax',
-       // method:'post',
-        url : '/roler/getAllRoles'
-    }
-}).load();
-
-
-//角色列表
-var roleList=Ext.create('Ext.grid.Panel',{
-    width:500,
-    height:400,
-  //  x:550,
-   // y:10,
-   // layout:'container',
-    // align:'center',
-    margin:'10 auto 10 auto',
-    title:'系统角色列表',
-    floating:true,
-    selType: 'checkboxmodel',
-    selModel: {type: 'rowmodel'},
-    plugins: {ptype: 'cellediting',clicksToEdit: 1},
-
-    store:roleStore,
-    columns: [
-        { text: 'id', dataIndex: 'id'} ,
-        { text: 'name', dataIndex: 'role_name', editor:{xtype:'textfield'} }, 
-        { text:'status',dataIndex:'status',editor:{xtype:'combo',store:[    
-                ['1',1],
-                ['0',0]
-            ]
-            }
-        }
-    ],
-
-    //工具条按键
-    tbar:[
-        {
-        text:'显示添加角色输入窗口',
-        icon:'/public/icons/group/group_add.png',
-        listeners:{
-            click:{
-                fn:function(){
-              //  alert('show add role window');
-                addRoleWindow.show();
-
-                }
-            }
-        }
-        },
-
-             {
-        text:'删除角色',
-        icon:'/public/icons/group/group_delete.png',
-        listeners:{
-            click:{
-                fn:function(){
-                    if(confirm("确定要删除所选的用户")){
-
-                    
-                var selectRoles=roleList.getSelectionModel().getSelection();
-                roles=[];
-                for(var item in selectRoles){
-                    roles.push(selectRoles[item].data);
-                };
-                Ext.Ajax.request({
-                    url:'/roler/deleteRole',
-                    method:'post',
-                    params:{rolers:JSON.stringify(roles)},
-                    success:function(response,opts){
-                        alert('提交保存成功,确认后刷新.',response.responseText);
-                        roleStore.load();
-
-                    },
-                    failure:function(response,opts){
-                    }
-                });
-                }else{
-                return;
-            }
-            }
-            }
-        }
-        },
-
-             {
-        text:'修改角色',
-        icon:'/public/icons/group/group_edit.png',
-        listeners:{
-            click:{
-                fn:function(){
-                var allRoles=roleList.getStore().getData().items;;
-                roles=[];
-                for(var item in allRoles){
-                    roles.push(allRoles[item].data);
-                };
-                Ext.Ajax.request({
-                    url:'/roler/modifyRole',
-                    method:'post',
-                    params:{rolers:JSON.stringify(roles)},
-                    success:function(response,opts){
-                        alert(response.responseText);
-                        roleStore.load();
-
-                    },
-                    failure:function(response,opts){
-
-                    }
-                });
-                }
-            }
-        }
-        },
-    ],
-    renderTo:Ext.getBody()
-});
-
-
-
-
-
-});
-
-
-
-
 </script>

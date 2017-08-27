@@ -4,21 +4,19 @@
 <head>
     <title></title>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--  引入extjs库-->
-    <!--
-    <link rel="stylesheet" type="text/css" href="/Extjs/theme-neptune/resources/theme-neptune-all.css" />
-    <link rel="stylesheet" type="text/css" href="/Extjs/theme-classic/resources/theme-classic-all.css" />
-    -->
     <link rel="stylesheet" type="text/css" href="/Extjs/theme-triton/resources/theme-triton-all.css" />
     <script type="text/javascript" src="/Extjs/ext.js"></script>
-    <script type="text/javascript" src="/Extjs/ext-all-debug.js"></script>
+    <script type="text/javascript" src="/Extjs/ext-all.js"></script>
     <!-- 加载EXTjs中文配置文件 -->
     <script type="text/javascript" src="/Extjs/locale/locale-zh_CN-debug.js"></script>
 
 </head>
 
 <body>
+
 </body>
 
 </html>
@@ -31,14 +29,19 @@
         function createTab(container, item) {
 
             var tab = {
+
                 title: item.data.name,
                 closable: true,
+                // xtype: 'panel',
                 id: 'tab' + item.data.id, //不能是纯数字的,所以加tab开头
+                layout: "auto",
                 loader: {
                     url: item.data.url,
                     autoLoad: true,
                     scripts: true
                 },
+                //  items: [tab.loader],
+                //   renderTo: container
 
             };
 
@@ -62,8 +65,14 @@
         };
         var treePanel = Ext.create('Ext.tree.Panel', {
             region: 'west',
+            title: '功能菜单',
+
             xtype: 'treepanel',
             width: '20%',
+            split: true,
+            collapsible: true,
+
+            animCollapse: true,
             id: 'treepanel',
             rootVisible: false,
             store: gongneng.treeStore,
@@ -96,8 +105,17 @@
             width: '80%',
             xtype: 'tabpanel',
             plain: false,
+            animateShadow: true,
+            animate: true,
+            animCollapse: true,
+            shadow: true,
+            setPagePosition: 300,
             id: "tabPanel",
-
+            tabBar: {
+                layout: {
+                    pack: 'left'
+                }
+            },
             items: [{
                 xtype: 'panel',
                 closable: true,

@@ -44,7 +44,7 @@ router.post("/valitPassword", function(req, res, next) {
 
 // 显示新增用户界面
 router.get("/showAddUser", function(req, res, next) {
-    res.render("./users/admin", { title: "用户管理" });
+    res.render("./users/index", { title: "用户管理" });
 });
 
 // 处理新增用户

@@ -6,13 +6,13 @@ var roler = require("../model/roler.server.model");
  * 显示角色维护界面
  */
 router.get("/", function(req, res, next) {
-    res.render("./roler/admin", { title: "角色管理" });
+    res.render("./roler/index", { title: "角色管理" });
 });
 
 /**
  * 取得所有的用户角色
  */
-router.get("/", function(req, res, next) {
+router.get("/getAllRole", function(req, res, next) {
     // var role=req.body.rolers;
     roler.getAllRole(function(doc) {
         res.json(doc);

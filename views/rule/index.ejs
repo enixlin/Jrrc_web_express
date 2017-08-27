@@ -1,27 +1,157 @@
-<script>
-    Ext.onReady(function() {
+<!DOCTYPE html>
+<html lang="en">
 
-        function initRuleTree() {
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        Ext.onReady(function() {
+            /*设置一个容器div 放置所有功能管理的组件 */
+            var rulediv = Ext.get("rulediv");
 
-            var treeStore = Ext.create('Ext.data.TreeStore', {
+
+            var treeStore1 = Ext.create('Ext.data.TreeStore', {
                 fields: ['id', 'name', 'url', 'pid'],
                 proxy: {
                     url: '/rule/makeRuleTree',
                     type: 'ajax'
                 }
             });
-            var treeList = Ext.create('Ext.tree.Panel', {
+
+            var treepanel1 = Ext.create('Ext.tree.Panel', {
+                // title: 'Forum Folder Summary',
                 width: '100%',
                 height: 400,
-                renderTo: Ext.getCmp("tabPanel.items"),
-                //id: 'treepanel',
+                renderTo: rulediv,
+                reserveScrollbar: true,
+                //  collapsible: true,
+                loadMask: true,
+                useArrows: true,
                 rootVisible: false,
-                store: treeStore,
-                displayField: 'name',
+                store: treeStore1,
+                animate: false,
 
+                //工具条按键
+                tbar: [{
+                        text: '显示添加权限输入窗口',
+                        icon: '/public/icons/medal_gold_add.png',
+                        listeners: {
+                            click: {
+                                fn: function() {
+                                    //  alert('show add role window');
+                                    addRuleWindow.show();
+
+                                }
+                            }
+                        }
+                    },
+
+                    {
+                        text: '删除权限',
+                        icon: '/public/icons/medal_gold_delete.png',
+                        listeners: {
+                            click: {
+                                fn: function() {
+                                    if (confirm("确定要删除所选的权限")) {
+                                        var selectRule = ruleList.getSelectionModel().getSelection();
+                                        rules = [];
+                                        for (var item in selectRule) {
+                                            rules.push(selectRule[item].data);
+                                        };
+                                        Ext.Ajax.request({
+                                            url: '/rule/deleteRule',
+                                            method: 'post',
+                                            params: {
+                                                "rule": JSON.stringify(rules)
+                                            },
+                                            success: function(response, opts) {
+                                                alert('提交保存成功,确认后刷新.', response.responseText);
+                                                ruleStore.load();
+                                            },
+                                            failure: function(response, opts) {}
+                                        });
+                                    } else {
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    },
+
+                    {
+                        text: '修改权限',
+                        icon: '/public/icons/medal_gold_3.png',
+                        listeners: {
+                            click: {
+                                fn: function() {
+                                    var allRules = ruleList.getStore().getData().items;;
+                                    rules = [];
+                                    for (var item in allRules) {
+                                        rules.push(allRules[item].data);
+                                    };
+                                    Ext.Ajax.request({
+                                        url: '/rule/modifyRule',
+                                        method: 'post',
+                                        params: {
+                                            rule: JSON.stringify(rules)
+                                        },
+                                        success: function(response, opts) {
+                                            alert(response.responseText);
+                                            ruleStore.load();
+                                        },
+                                        failure: function(response, opts) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    },
+                ],
+
+                columns: [{
+                    xtype: 'treecolumn', //this is so we know which column will show the tree
+                    text: '功能权限树',
+                    flex: 2.5,
+                    sortable: true,
+                    dataIndex: 'name'
+                }, {
+                    text: '功能权限名称',
+                    flex: 1,
+                    dataIndex: 'name',
+                    sortable: true
+                }, {
+                    text: '请求地址',
+                    flex: 2,
+                    dataIndex: 'url',
+                    //  renderer: renderTitle
+                }],
+                listeners: {
+                    itemclick: {
+                        fn: function(treePanel1, record, item, index, e, eOpts) {
+                            // console.log('record');
+                            // console.log(record);
+                            // console.log('item');
+                            // console.log(item);
+                            // console.log('index');
+                            // console.log(index);
+                        }
+                    }
+                }
             });
-        }
 
-        initRuleTree();
-    });
-</script>
+
+
+
+
+        });
+    </script>
+    <title>rule</title>
+</head>
+
+<body>
+    <div id="rulediv"></div>
+</body>
+
+</html>
