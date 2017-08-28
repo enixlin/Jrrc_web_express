@@ -10,7 +10,6 @@
             /*设置一个容器div 放置所有功能管理的组件 */
             var rulediv = Ext.get("rulediv");
 
-
             var treeStore1 = Ext.create('Ext.data.TreeStore', {
                 fields: ['id', 'name', 'url', 'pid'],
                 proxy: {
@@ -31,6 +30,13 @@
                 rootVisible: false,
                 store: treeStore1,
                 animate: false,
+                selModel: {
+                    type: 'rowmodel'
+                },
+                plugins: {
+                    ptype: 'cellediting',
+                    clicksToEdit: 1
+                },
 
                 //工具条按键
                 tbar: [{
@@ -85,25 +91,34 @@
                         listeners: {
                             click: {
                                 fn: function() {
-                                    var allRules = ruleList.getStore().getData().items;;
-                                    rules = [];
-                                    for (var item in allRules) {
-                                        rules.push(allRules[item].data);
-                                    };
-                                    Ext.Ajax.request({
-                                        url: '/rule/modifyRule',
-                                        method: 'post',
-                                        params: {
-                                            rule: JSON.stringify(rules)
-                                        },
-                                        success: function(response, opts) {
-                                            alert(response.responseText);
-                                            ruleStore.load();
-                                        },
-                                        failure: function(response, opts) {
+                                    //var allRules = treeStore1.getStore().getData().items;
+                                    console.log("rules");
+                                    var rulesStore = treeStore1.getData().items;
 
-                                        }
-                                    });
+                                    // rules = [];
+
+                                    // for (var item in rulesStore) {
+                                    //     rules.push(rules1[item].data);
+                                    // };
+                                    console.log(rulesStore);
+
+                                    // for (var item in allRules) {
+                                    //     rules.push(allRules[item].data);
+                                    // };
+                                    // Ext.Ajax.request({
+                                    //     url: '/rule/modifyRule',
+                                    //     method: 'post',
+                                    //     params: {
+                                    //         rule: JSON.stringify(rules)
+                                    //     },
+                                    //     success: function(response, opts) {
+                                    //         alert(response.responseText);
+                                    //         ruleStore.load();
+                                    //     },
+                                    //     failure: function(response, opts) {
+
+                                    //     }
+                                    // });
                                 }
                             }
                         }
@@ -111,39 +126,59 @@
                 ],
 
                 columns: [{
-                    xtype: 'treecolumn', //this is so we know which column will show the tree
-                    text: '功能权限树',
-                    flex: 2.5,
-                    sortable: true,
-                    dataIndex: 'name'
-                }, {
-                    text: '功能权限名称',
-                    flex: 1,
-                    dataIndex: 'name',
-                    sortable: true
-                }, {
-                    text: '请求地址',
-                    flex: 2,
-                    dataIndex: 'url',
-                    //  renderer: renderTitle
-                }],
+                        xtype: 'treecolumn', //this is so we know which column will show the tree
+                        text: '功能权限树',
+                        columnWidth: 100,
+                        width: 200,
+                        flex: 2.5,
+                        sortable: true,
+                        dataIndex: 'name'
+                    }, {
+                        text: '节点编号',
+                        width: 200,
+                        flex: 1,
+                        dataIndex: 'id',
+                        editor: {
+                            xtype: 'textfield'
+                        }
+                        //  renderer: renderTitle
+                    }, {
+                        text: '功能权限名称',
+                        flex: 2,
+                        width: 200,
+                        dataIndex: 'name',
+                        sortable: true,
+                        editor: {
+                            xtype: 'textfield'
+                        }
+                    }, {
+                        text: '请求地址',
+                        flex: 2,
+                        width: 200,
+                        dataIndex: 'url',
+                        editor: {
+                            xtype: 'textfield'
+                        }
+                        //  renderer: renderTitle
+                    }, {
+                        text: '父节点编号',
+                        flex: 1,
+                        width: 200,
+                        dataIndex: 'pid',
+                        editor: {
+                            xtype: 'textfield'
+                        }
+                        //  renderer: renderTitle
+                    },
+
+
+                ],
                 listeners: {
                     itemclick: {
-                        fn: function(treePanel1, record, item, index, e, eOpts) {
-                            // console.log('record');
-                            // console.log(record);
-                            // console.log('item');
-                            // console.log(item);
-                            // console.log('index');
-                            // console.log(index);
-                        }
+                        fn: function(treePanel1, record, item, index, e, eOpts) {}
                     }
                 }
             });
-
-
-
-
 
         });
     </script>
