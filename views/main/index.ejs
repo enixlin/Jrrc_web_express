@@ -29,7 +29,8 @@
         function createTab(container, item) {
 
             var tab = {
-
+                bufferedRenderer: false,
+                animate: true,
                 title: item.data.name,
                 closable: true,
                 // xtype: 'panel',
@@ -66,13 +67,13 @@
         var treePanel = Ext.create('Ext.tree.Panel', {
             region: 'west',
             title: '功能菜单',
-
+            bufferedRenderer: false,
+            animate: true,
+            reserveScrollbar: true,
             xtype: 'treepanel',
-            width: '20%',
+            width: 200,
             split: true,
             collapsible: true,
-
-            animCollapse: true,
             id: 'treepanel',
             rootVisible: false,
             store: gongneng.treeStore,
@@ -104,11 +105,10 @@
             region: 'center',
             width: '80%',
             xtype: 'tabpanel',
-            plain: false,
-            animateShadow: true,
+            //plain: false,
+            bufferedRenderer: false,
             animate: true,
-            animCollapse: true,
-            shadow: true,
+
             setPagePosition: 300,
             id: "tabPanel",
             tabBar: {

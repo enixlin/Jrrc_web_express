@@ -5,10 +5,7 @@ var router = express.Router();
 
 var user = require("../model/users.server.model");
 
-/* GET users listing. */
-router.get("/", function(req, res, next) {
-    res.send("respond with a resource");
-});
+
 
 router.get("/getAvailableUsersNames", function(req, res, next) {
     user.getAvailableUsersNames(function(doc) {
@@ -43,7 +40,7 @@ router.post("/valitPassword", function(req, res, next) {
 });
 
 // 显示新增用户界面
-router.get("/showAddUser", function(req, res, next) {
+router.get("/", function(req, res, next) {
     res.render("./users/index", { title: "用户管理" });
 });
 
