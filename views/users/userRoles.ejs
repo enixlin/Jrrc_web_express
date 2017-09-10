@@ -9,6 +9,7 @@
     <script>
         Ext.onReady(function() {
             var userrolediv = Ext.get('userrolediv');
+            var roleselectdiv = Ext.get('roleselectdiv');
 
             /* 取得所有的用户 */
             var userRoleStore1 = Ext.create('Ext.data.Store', {
@@ -52,16 +53,14 @@
 
             /* 角色选择 */
             /* Ext.ux.form.ItemSelector */
-            // var roleSelector = Ext.create('Ext.ux.form.ItemSelector', {
-            //     renderTo: userrolediv,
-            //     width: "100%",
-            //     height: 450,
-            //     store: userRoleStore2,
-            //     displayField: "role_name",
-            //     valueField: "id"
-            // });
-
-
+            var roleSelector = Ext.create('Ext.view.MultiSelector', {
+                renderTo: roleselectdiv,
+                width: "20%",
+                height: 450,
+                store: userRoleStore2,
+                displayField: 'role_name',
+                valueField: 'id'
+            });
 
         });
     </script>
@@ -69,6 +68,7 @@
 
 <body>
     <div id="userrolediv"></div>
+    <div id="roleselectdiv"></div>
 </body>
 
 </html>

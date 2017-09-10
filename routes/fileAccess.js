@@ -8,11 +8,7 @@ router.get('/', function(req, res, next) {
 
 });
 
-/* 读取文件 */
-function readFile(path, cb) {
-    var content = fs.readFileSync(path, 'utf-8');
-    cb(content);
-}
+
 
 
 

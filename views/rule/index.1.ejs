@@ -127,12 +127,16 @@
         }).load();
 
 
+        var treeEditor = Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        });
         //权限列表
         var ruleList = Ext.create('Ext.grid.Panel', {
             width: 500,
             height: 400,
             renderTo: rulediv,
             margin: '10 auto 10 auto',
+            plugins: treeEditor,
             title: '系统权限列表',
 
             selType: 'checkboxmodel',
