@@ -7,12 +7,20 @@ var LZH = {
 
         function init() {
             var client = new ftp();
+            // client.connect({
+            //     host: config.jrrc_ftpParams.host,
+            //     port: config.jrrc_ftpParams.port,
+            //     user: config.jrrc_ftpParams.user,
+            //     password: config.jrrc_ftpParams.password
+            // });
+
             client.connect({
-                host: config.jrrc_ftpParams.host,
-                port: config.jrrc_ftpParams.port,
-                user: config.jrrc_ftpParams.user,
-                password: config.jrrc_ftpParams.password
+                host: config.ftpParams.host,
+                port: config.ftpParams.port,
+                user: config.ftpParams.user,
+                password: config.ftpParams.password
             });
+
             return client;
         }
 
