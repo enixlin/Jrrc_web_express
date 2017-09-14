@@ -21,6 +21,8 @@ var LZH = {
                 password: config.ftpParams.password
             });
 
+            client.ascii(function(err) {});
+
             return client;
         }
 

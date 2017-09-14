@@ -35,31 +35,31 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 // 设置 session 的可选参数
-app.use(
-    session({
-        secret: "recommand 128 bytes random string", // 建议使用 128 个字符的随机字符串
-        cookie: { maxAge: 8 * 60 * 60 * 1000 },
-        resave: true,
-        saveUninitialized: true
-    })
-);
+// app.use(
+//     session({
+//         secret: "recommand 128 bytes random string", // 建议使用 128 个字符的随机字符串
+//         cookie: { maxAge: 8 * 60 * 60 * 1000 },
+//         resave: true,
+//         saveUninitialized: true
+//     })
+// );
 
 //设置session校验，对所有的请求都进行session验证，没有登录的都返回登录界面
-app.use(function(req, res, next) {
-    if (req.session.loginUser) {
-        next();
-    } else {
-        if (
-            req.path == "/login" ||
-            req.path == "/users/getAvailableUsersNames" ||
-            req.path == "/users/valitPassword"
-        ) {
-            next();
-        } else {
-            res.redirect("/login");
-        }
-    }
-});
+// app.use(function(req, res, next) {
+//     if (req.session.loginUser) {
+//         next();
+//     } else {
+//         if (
+//             req.path == "/login" ||
+//             req.path == "/users/getAvailableUsersNames" ||
+//             req.path == "/users/valitPassword"
+//         ) {
+//             next();
+//         } else {
+//             res.redirect("/login");
+//         }
+//     }
+// });
 
 app.use("/", index);
 app.use("/users", users);

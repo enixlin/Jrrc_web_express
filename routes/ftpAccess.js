@@ -34,6 +34,7 @@ router.get("/saveFtpFile", function(req, res, next) {
     // 取得服务器上所有的文件夹
     var folders;
     var foldersODS;
+    var c = ftpClient;
     getFolders(ftpClient, function(list) {
         folders = list.folder;
         foldersODS = list.folderODS;
@@ -47,7 +48,11 @@ router.get("/saveFtpFile", function(req, res, next) {
         // 先进行数据文件夹的日期校验
         if (lastDay_folder == lastDay_folderODS.slice(3, 11)) {
             // 创建服务器文件夹
-            fs.mkdir('./public/dataBackUp/' + lastDay_folder);
+            //  fs.rmdirSync('./public/dataBackUp/' + lastDay_folder);
+            if (!fs.existsSync('./public/dataBackUp/' + lastDay_folder)) {
+                fs.mkdir('./public/dataBackUp/' + lastDay_folder);
+            }
+
             // 下载ods文件
             var ftpFolder = lastDay_folderODS;
             var localFolder = lastDay_folder;
@@ -55,7 +60,7 @@ router.get("/saveFtpFile", function(req, res, next) {
             saveFtpFile(ftpClient, ftpFolder, localFolder, "iss_filetf10_ods");
 
             // 下载国结系统文件
-            // ftpFolder = lastDay_folder;
+            ftpFolder = lastDay_folder;
             saveFtpFile(ftpClient, localFolder, localFolder, "c_brchno");
             saveFtpFile(ftpClient, localFolder, localFolder, "fc_balance_avg");
             saveFtpFile(ftpClient, localFolder, localFolder, "ifx_iss_cfmbusi");
@@ -124,20 +129,17 @@ function getLastDayFolder(folders) {
 
 
 function saveFtpFile(ftpClient, ftpFolder, localFolder, file) {
-    ftpClient.get('/' + ftpFolder + '/' + file + '.dat', function(err, rs) {
-        var ws = fs.createWriteStream('./public/dataBackUp/' + localFolder + '/' + file + '.dat', { start: 0 });
-        rs.pipe(ws);
-        rs.on('data', function(data) {
-            // console.log('数据可读')
-        });
-        rs.on('end', function() {
-            console.log('文件读取完成');
-            // end = Date.getTime();
-            // var dd = new Date();
-            // console.log('用时：' + (dd.getTime() - start));
-            //ws.end('再见')
-        });
+    // var c = ftpClient;
+    ftpClient.get('/' + ftpFolder + '/' + file + '.dat', function(err, stream) {
+        if (err) {
+            console.log('ftpclient get error');
+            console.log(err);
+        } else {
+            // stream.setEncoding('UTF-8');
+            stream.pipe(fs.createWriteStream('./public/dataBackUp/' + localFolder + '/' + file + '.dat', { start: 0, defaultEncoding: 'utf8' }));
+        }
     });
+
 }
 
 
